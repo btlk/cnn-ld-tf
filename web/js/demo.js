@@ -1,5 +1,8 @@
 $(document).ready(function() {
   /* initial rendering */
+
+  var file_content = "";
+
   var chart = new CanvasJS.Chart("chartContainer",
     {
       title:{
@@ -39,7 +42,17 @@ $(document).ready(function() {
 
   /* Redraw Prediction */
   $('#send-text').on('click', function() {
-    var text = $("#get-text").val();
+    var radios_detect_from = document.getElementsByName('detect_from');
+    var text = "";
+    if (radios_detect_from[0].checked) {
+      text = $("#get-text").val();
+    } else {
+      text = file_content;
+    }
+    if (text == "") {
+      alert("Document is empty!");
+      return;
+    }
     var host = 'http://localhost:5000';
     //sanitize
     text = text.replace(/(^[ '\^\$\*#&]+)|([ '\^\$\*#&]+$)/g, '')
@@ -122,20 +135,15 @@ $(document).ready(function() {
   });
 
   $('#set-text-from-file').change(function (event) {
-      // var filePath = $(this).val();
-      // $('#filepath').text(filePath);
-      // jQuery.get(filePath, function(data) {
-      //     console.log(data);
-      // });
-      //var tmppath = URL.createObjectURL(event.target.files[0]); 
-
       var fileToLoad = document.getElementById("set-text-from-file").files[0];
-   
+      var filename = this.value.replace(/^.*[\\\/]/, '');
       var fileReader = new FileReader();
       fileReader.onload = function(fileLoadedEvent) 
       {
           var textFromFileLoaded = fileLoadedEvent.target.result;
-          document.getElementById("get-text").value = textFromFileLoaded;
+          file_content = textFromFileLoaded;
+          document.getElementById("filepath").innerHTML = filename;
+          //document.getElementById("get-text").value = textFromFileLoaded;
       };
       fileReader.readAsText(fileToLoad, "UTF-8"); 
   });
