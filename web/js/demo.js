@@ -1,5 +1,9 @@
 $(document).ready(function() {
   /* initial rendering */
+
+  var file_content = "";
+  var recog_text = "";
+
   var chart = new CanvasJS.Chart("chartContainer",
     {
       title:{
@@ -39,7 +43,18 @@ $(document).ready(function() {
 
   /* Redraw Prediction */
   $('#send-text').on('click', function() {
-    var text = $("#get-text").val();
+    var radios_detect_from = document.getElementsByName('detect_from');
+    var text = "";
+    if (radios_detect_from[0].checked) {
+      text = $("#get-text").val();
+    } else {
+      text = file_content;
+    }
+    if (text == "") {
+      alert("Document is empty!");
+      return false;
+    }
+    recog_text = text;
     var host = 'http://localhost:5000';
     //sanitize
     text = text.replace(/(^[ '\^\$\*#&]+)|([ '\^\$\*#&]+$)/g, '')
@@ -122,20 +137,71 @@ $(document).ready(function() {
   });
 
   $('#set-text-from-file').change(function (event) {
-      // var filePath = $(this).val();
-      // $('#filepath').text(filePath);
-      // jQuery.get(filePath, function(data) {
-      //     console.log(data);
-      // });
-      //var tmppath = URL.createObjectURL(event.target.files[0]); 
-
       var fileToLoad = document.getElementById("set-text-from-file").files[0];
-   
+      var filename = this.value.replace(/^.*[\\\/]/, '');
       var fileReader = new FileReader();
       fileReader.onload = function(fileLoadedEvent) 
       {
           var textFromFileLoaded = fileLoadedEvent.target.result;
-          document.getElementById("get-text").value = textFromFileLoaded;
+          file_content = textFromFileLoaded;
+          document.getElementById("filepath").innerHTML = filename;
+          //document.getElementById("get-text").value = textFromFileLoaded;
+      };
+      fileReader.readAsText(fileToLoad, "UTF-8"); 
+  });
+
+  function add_zero(s) {
+    if (s.length < 2) {
+      s = "0" + s;
+    }
+    return s;
+  }
+
+  $('#save-result').on('click', function() {
+      var date = new Date();
+      var dd = add_zero(String(date.getDate()));
+      var mm = add_zero(String(date.getMonth() + 1));
+      var yyyy = String(date.getFullYear());
+      var hh = add_zero(String(date.getHours()));
+      var min = add_zero(String(date.getMinutes()));
+      var ss = add_zero(String(date.getSeconds()));
+
+      var chp_date = dd + ":" + mm + ":" + yyyy + " " + hh + ":" + min + ":" + ss;
+      var chp_prediction = document.getElementById("prediction").innerHTML;
+      var chp_score = document.getElementById("score").innerHTML;
+      var chp_text = recog_text;
+
+      var chp_total = chp_date + '\n' + chp_prediction +'\n' + chp_score + '\n' + chp_text;
+
+      var element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(chp_total));
+      element.setAttribute('download', "chp_" + chp_date + ".txt");
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+  });
+
+  $('#load-result').change(function (event) {
+      var fileToLoad = document.getElementById("load-result").files[0];
+      var fileReader = new FileReader();
+      fileReader.onload = function(fileLoadedEvent) 
+      {
+          var textFromFileLoaded = fileLoadedEvent.target.result;
+          var lines = textFromFileLoaded.split('\n');
+          if (lines.length < 4) {
+            alert("Checkpoint is corrupted! Unable to load.")
+            return;
+          }
+          document.getElementById("prediction").innerHTML = lines[1];
+          document.getElementById("score").innerHTML = lines[2];
+          var s_text = "";
+          for (var line = 3; line < lines.length; ++line) {
+            s_text += lines[line] + "\n";
+          }
+          document.getElementById("get-text").value = s_text;
+          document.getElementById("chartContainer").innerHTML = "";
+          //document.getElementById("get-text").value = textFromFileLoaded;
       };
       fileReader.readAsText(fileToLoad, "UTF-8"); 
   });

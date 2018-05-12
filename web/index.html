@@ -22,16 +22,6 @@
 
 </head>
 <body>
-<nav class="navbar navbar-default navbar-inverse">
-    <div class="container">
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">TextLang</a></li>
-                <li><a href="stat.html">Statistics</a></li>
-            </ul>
-        </div><!--/.nav-collapse -->
-    </div>
-</nav>
 <div id="page-body">
 <div class="container">
     <section class="container-fluid">
@@ -60,6 +50,10 @@
                             </label>
                         </span>
                         <button type="submit" class="btn btn-primary btn-outline pull-right" id="send-text" href="">Detect Language</button>
+                        <button type="button" class="btn btn-primary btn-outline pull-left" id="save-result" href="">Save result</button>
+                        <span class="btn btn-primary btn-outline pull-left btn-file">
+                            Display Result From File<input type="file" id="load-result" accept=".txt">
+                        </span>
                     </div>
                 </form>
                 </div>
@@ -79,20 +73,6 @@
 </div><!-- end .page-body -->
 
 <div class="footer">
-    <div class="container">
-    <div class="col-md-6 note">
-        <span class="note-label">Note:</span> Please make sure that the backend server is running properly. To run the server:
-        <div class="panel code">
-            <span>git clone https://github.com/may-/cnn-ld-tf.git</span>
-            <span>cd cnn-ld-tf</span>
-            <span>python ./main.py</span>
-        </div>
-    </div>
-    <div class="col-md-6 note">
-        <div>The pretrained model achieved 88% classification accuracy on the validation set.</div>
-        <div> >> <a href="./stat.html">Statistics</a></div>
-    </div>
-    </div>
 </div><!-- end .footer-->
 </body>
 </html>
