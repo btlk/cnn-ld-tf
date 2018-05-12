@@ -57,7 +57,12 @@ $(document).ready(function() {
     recog_text = text;
     var host = 'http://localhost:5000';
     //sanitize
-    text = text.replace(/(^[ '\^\$\*#&]+)|([ '\^\$\*#&]+$)/g, '')
+    text = text.replace(/[.,\/#!$%\^&\*;:{}\"=\-_`~()]/g,"");
+    text = text.replace(/\s{2,}/g," ");
+    if (text == "" || text == " ") {
+      alert("String for detection is empty!");
+      return false;
+    }
     host = host.replace(/(\/)$/, '');
     console.log(host + "/predict?text=" + text);
 
