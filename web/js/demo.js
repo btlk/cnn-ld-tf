@@ -57,7 +57,7 @@ $(document).ready(function() {
     recog_text = text;
     var host = 'http://localhost:5000';
     //sanitize
-    text = text.replace(/[.,\/#!$%\^&\*;:{}\"=\-_`~()]/g,"");
+    text = text.replace(/[.,\/@#!?$%\^&\*;:{}\"=+/\-_`~()<>|'\[\]0-9]/g,"");
     text = text.replace(/\s{2,}/g," ");
     if (text == "" || text == " ") {
       alert("String for detection is empty!");
