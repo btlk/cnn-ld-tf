@@ -57,7 +57,7 @@ $(document).ready(function() {
     recog_text = text;
     var host = 'http://localhost:5000';
     //sanitize
-    text = text.replace(/[.,\/@#!?$%\^&\*;:{}\"=+/\-_`~()<>|'\[\]0-9]/g,"");
+    text = text.replace(/[.,\/@#!?$%\^&\*;:{}\"=+\/\\-_`~()<>|'\[\]0-9]/g,"");
     text = text.replace(/\s{2,}/g," ");
     if (text == "" || text == " ") {
       alert("String for detection is empty!");
@@ -195,7 +195,11 @@ $(document).ready(function() {
           var textFromFileLoaded = fileLoadedEvent.target.result;
           var lines = textFromFileLoaded.split('\n');
           if (lines.length < 4) {
-            alert("Checkpoint is corrupted! Unable to load.")
+            alert("Checkpoint is corrupted! Unable to load.");
+            return;
+          }
+          if (isNaN(parseFloat(lines[2]))) {
+            alert("Checkpoint's score is not a number! Unable to load.");
             return;
           }
           document.getElementById("prediction").innerHTML = lines[1];
