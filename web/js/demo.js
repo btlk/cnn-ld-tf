@@ -171,7 +171,7 @@ $(document).ready(function() {
       var min = add_zero(String(date.getMinutes()));
       var ss = add_zero(String(date.getSeconds()));
 
-      var chp_date = dd + ":" + mm + ":" + yyyy + " " + hh + ":" + min + ":" + ss;
+      var chp_date = dd + "." + mm + "." + yyyy + "_" + hh + "." + min + "." + ss;
       var chp_prediction = document.getElementById("prediction").innerHTML;
       var chp_score = document.getElementById("score").innerHTML;
       var chp_text = recog_text;
@@ -180,7 +180,7 @@ $(document).ready(function() {
 
       var element = document.createElement('a');
       element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(chp_total));
-      element.setAttribute('download', "chp_" + chp_date + ".txt");
+      element.setAttribute('download', chp_date + "_Prediction.txt");
       element.style.display = 'none';
       document.body.appendChild(element);
       element.click();
