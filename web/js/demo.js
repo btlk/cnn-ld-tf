@@ -180,7 +180,7 @@ $(document).ready(function() {
 
       var element = document.createElement('a');
       element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(chp_total));
-      element.setAttribute('download', chp_date + "_Prediction.txt");
+      element.setAttribute('download', chp_date + "_" + chp_prediction + ".txt");
       element.style.display = 'none';
       document.body.appendChild(element);
       element.click();
